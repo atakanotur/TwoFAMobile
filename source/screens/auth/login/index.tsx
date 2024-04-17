@@ -16,8 +16,8 @@ const Login = () => {
     const token: String = useAppSelector(state => state.auth.token);
     const user: User = useAppSelector(state => state.auth.user);
     const userId: String = useAppSelector(state => state.auth.userId);
-    const [email, setEmail] = useState<string>('canotur@live.com');
-    const [password, setPassword] = useState<string>('12345678');
+    const [email, setEmail] = useState<string>("can.otur@hotmail.com");
+    const [password, setPassword] = useState<string>("12345678");
     const [twoFAVisible, setTwoFAVisible] = useState<Boolean>(false);
     const [code, setCode] = useState<string>('');
 
@@ -31,9 +31,9 @@ const Login = () => {
                         return navigation.navigate('Tab');
                     }
                 }
-                return Alert.alert('Login Failed!', 'Please check your email or password and try again', [{ text: 'OK' }]);
             } catch (error) {
                 console.log('loginError', error);
+                return Alert.alert('Login Failed!', 'Please check your email or password and try again', [{ text: 'OK' }]);
             }
         }
     }
@@ -41,7 +41,7 @@ const Login = () => {
     const confirmTwoFACode = async () => {
         if (code && code.length == 6 && userId) {
             try {
-                const { payload } = await dispatch(validateAsync({ user_id: userId, token: code }));
+                const { payload } = await dispatch(validateAsync({ validateUser: { user_id: userId, token: code }, token, }));
                 if (payload && payload.code == '200') {
                     setCode('');
                     setTwoFAVisible(false);

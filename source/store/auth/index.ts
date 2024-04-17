@@ -34,8 +34,8 @@ export const registerAsync = createAsyncThunk(
 
 export const generateOTPAsync = createAsyncThunk(
   'auth/generateOTPAsync',
-  async (userId: String) => {
-    const result = await generateOTP(userId);
+  async ({userId, token}: {userId: String; token: String}) => {
+    const result = await generateOTP(userId, token);
     return result;
   },
 );
@@ -50,16 +50,22 @@ export const verifyAsync = createAsyncThunk(
 
 export const validateAsync = createAsyncThunk(
   'auth/validateAsync',
-  async (validateUser: ValidateUser) => {
-    const result = await validate(validateUser);
+  async ({
+    validateUser,
+    token,
+  }: {
+    validateUser: ValidateUser;
+    token: String;
+  }) => {
+    const result = await validate(validateUser, token);
     return result;
   },
 );
 
 export const disableOTPAsync = createAsyncThunk(
   'auth/disableOTPAsync',
-  async (userId: String) => {
-    const result = await disableOTP(userId);
+  async ({userId, token}: {userId: String; token: String}) => {
+    const result = await disableOTP(userId, token);
     return result;
   },
 );
@@ -92,7 +98,27 @@ const initialState: InitialState = {
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    logout: state => {
+      state.user = {
+        _id: '',
+        email: '',
+        is_active: false,
+        first_name: '',
+        last_name: '',
+        phone_number: '',
+        otp_enabled: false,
+        otp_verified: false,
+        otp_base32: '',
+        otp_auth_url: '',
+      };
+      state.token = '';
+      state.userId = '';
+    },
+    updateUser: (state, action) => {
+      state.user = action.payload;
+    },
+  },
   extraReducers: builder => {
     //login
     builder.addCase(loginAsync.pending, state => {
@@ -164,5 +190,7 @@ const authSlice = createSlice({
     });
   },
 });
+
+export const {logout, updateUser} = authSlice.actions;
 
 export default authSlice.reducer;

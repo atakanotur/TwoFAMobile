@@ -5,7 +5,7 @@ import { styles } from './styles';
 import { Button, TwoFACode, Text } from '../../components';
 import { User } from '../../types';
 import { useAppSelector, useAppDispatch } from '../../hooks';
-import { disableOTPAsync, generateOTPAsync, verifyAsync } from '../../store/auth';
+import { disableOTPAsync, generateOTPAsync, verifyAsync, logout, updateUser } from '../../store/auth';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -17,10 +17,11 @@ const Profile = () => {
     const [code, setCode] = useState<string>('');
     const user: User = useAppSelector(state => state.auth.user);
     const userId: String = useAppSelector(state => state.auth.userId);
+    const token: String = useAppSelector(state => state.auth.token);
 
     const generateOTP = async () => {
         try {
-            const { payload: generatePayload } = await dispatch(generateOTPAsync(user._id));
+            const { payload: generatePayload } = await dispatch(generateOTPAsync({ userId, token }));
             if (generatePayload.data.base32) {
                 return Alert.alert("Success", "Your OTP code is generated!", [
                     {
@@ -40,6 +41,7 @@ const Profile = () => {
                 if (payload.code == '200') {
                     setCode('');
                     setTwoFAVisible(false);
+                    dispatch(updateUser({ ...user, otp_enabled: true, otp_verified: true }));
                     return Alert.alert('Success', '2FA verified successfully', [{ text: 'OK' }]);
                 }
                 else {
@@ -55,8 +57,9 @@ const Profile = () => {
 
     const disableOTP = async () => {
         try {
-            const { payload } = await dispatch(disableOTPAsync(userId))
+            const { payload } = await dispatch(disableOTPAsync({ userId, token }));
             if (payload.code == '200' && payload.data.success) {
+                dispatch(updateUser({ ...user, otp_enabled: false, otp_verified: false }));
                 return Alert.alert('Success', '2FA disabled successfully', [{ text: 'OK' }]);
             }
             return Alert.alert('Error', 'Please try again', [{ text: 'OK' }]);
@@ -67,43 +70,45 @@ const Profile = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text text='Profile' style={styles.text} />
-            <Button
-                text='Logout'
-                onPress={() => navigation.navigate('Login')}
-                style={styles.button}
-                textStyle={styles.buttonText}
-            />
-            {user.otp_enabled &&
-                <View>
-                    <Text text='2FA is enabled' style={styles.text} />
-                    <Button
-                        text='Disable 2FA'
-                        onPress={disableOTP}
-                        style={styles.button}
-                        textStyle={styles.buttonText}
-                    />
-                </View>
-            }
-            {
-                !user.otp_enabled &&
-                <View>
-                    <Button
-                        text='Generate OTP Code'
-                        onPress={generateOTP}
-                        style={styles.button}
-                        textStyle={styles.buttonText}
-                    />
-                    <Button
-                        text='Verify 2FA Code'
-                        onPress={() => setTwoFAVisible(true)}
-                        style={styles.button}
-                        textStyle={styles.buttonText} />
-                </View>
-            }
-
+            <View style={styles.banner}>
+                <Text text='Profile' style={styles.bannerText} />
+            </View>
+            <View style={styles.buttonContainer}>
+                <Button
+                    text='Logout'
+                    onPress={() => navigation.navigate('Login')}
+                    style={styles.button}
+                    textStyle={styles.buttonText}
+                />
+                {user.otp_enabled &&
+                    <View>
+                        <Text text='2FA is enabled' />
+                        <Button
+                            text='Disable 2FA'
+                            onPress={disableOTP}
+                            style={styles.button}
+                            textStyle={styles.buttonText}
+                        />
+                    </View>
+                }
+                {
+                    !user.otp_enabled &&
+                    <View>
+                        <Button
+                            text='Generate OTP Code'
+                            onPress={generateOTP}
+                            style={styles.button}
+                            textStyle={styles.buttonText}
+                        />
+                        <Button
+                            text='Verify 2FA Code'
+                            onPress={() => setTwoFAVisible(true)}
+                            style={styles.button}
+                            textStyle={styles.buttonText} />
+                    </View>
+                }
+            </View>
             <TwoFACode isVisible={twoFAVisible} setIsVisible={() => setTwoFAVisible(false)} confirmTwoFACode={confirmTwoFACode} setCode={setCode} />
-
         </SafeAreaView >
     )
 }

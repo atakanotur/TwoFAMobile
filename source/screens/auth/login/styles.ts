@@ -1,5 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import colors from '../../../theme/colors';
+import {responsiveFontSize} from '../../../theme/responsiveFontSize';
 
 const width = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
@@ -10,7 +11,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   headerText: {
-    fontSize: 50,
+    fontSize: responsiveFontSize(50),
     fontWeight: 'bold',
     color: colors.red,
   },
@@ -25,7 +26,7 @@ export const styles = StyleSheet.create({
     width: width - 20,
   },
   textInput: {
-    fontSize: 22,
+    fontSize: responsiveFontSize(22),
     color: colors.red,
   },
   loginButton: {
@@ -44,7 +45,7 @@ export const styles = StyleSheet.create({
     elevation: 9,
   },
   loginButtonText: {
-    fontSize: 20,
+    fontSize: responsiveFontSize(20),
     fontWeight: 'bold',
     padding: 10,
     color: 'white',
@@ -57,10 +58,10 @@ export const styles = StyleSheet.create({
   registerText: {
     color: 'black',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: responsiveFontSize(20),
   },
   registerButtonText: {
-    fontSize: 20,
+    fontSize: responsiveFontSize(20),
     fontWeight: 'bold',
     color: colors.green,
   },
@@ -69,7 +70,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   rememberButtonText: {
-    fontSize: 20,
+    fontSize: responsiveFontSize(20),
     fontWeight: 'bold',
     color: colors.red,
   },

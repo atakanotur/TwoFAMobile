@@ -1,7 +1,5 @@
 import axios, {AxiosInstance} from 'axios';
 import {
-  LoginWithTwoFA,
-  User,
   UserForLogin,
   UserForRegister,
   VerifyUser,
@@ -18,12 +16,10 @@ const axiosInstance: AxiosInstance = axios.create({
   },
 });
 
-const getRequest = async (endpoint: string) => {
-  const token = useAppSelector(state => state.auth.token);
-  if (token)
-    axiosInstance.defaults.headers.common['Authorization'] =
-      'Bearer ' + useAppSelector(state => state.auth.token);
-
+const getRequest = async (endpoint: string, token?: String) => {
+  if (token && token.length > 0) {
+    axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+  }
   return await axiosInstance
     .get(endpoint)
     .then(response => {
@@ -36,7 +32,10 @@ const getRequest = async (endpoint: string) => {
     });
 };
 
-const postRequest = async (endpoint: string, data: any) => {
+const postRequest = async (endpoint: string, data: any, token?: String) => {
+  if (token && token.length > 0) {
+    axiosInstance.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+  }
   return await axiosInstance
     .post(endpoint, data)
     .then(response => {
@@ -60,9 +59,15 @@ export const register = async (userForRegister: UserForRegister) => {
   return await postRequest(endpoint, userForRegister);
 };
 
-export const generateOTP = async (userId: String) => {
+export const generateOTP = async (userId: String, token: String) => {
   const endpoint = `${baseURL}/users/generateOTP`;
-  return await postRequest(endpoint, {user_id: userId});
+  return await postRequest(
+    endpoint,
+    {
+      user_id: userId,
+    },
+    token,
+  );
 };
 
 export const verify = async (verifyUser: VerifyUser) => {
@@ -70,24 +75,13 @@ export const verify = async (verifyUser: VerifyUser) => {
   return await postRequest(endpoint, verifyUser);
 };
 
-export const validate = async (validateUser: ValidateUser) => {
+export const validate = async (validateUser: ValidateUser, token: String) => {
   const endpoint = `${baseURL}/users/validate`;
-  return await postRequest(endpoint, validateUser);
+  return await postRequest(endpoint, validateUser, token);
 };
 
-export const disableOTP = async (userId: String) => {
+export const disableOTP = async (userId: String, token: String) => {
   const endpoint = `${baseURL}/users/disableOTP`;
-  return await postRequest(endpoint, {user_id: userId});
+  return await postRequest(endpoint, {user_id: userId}, token);
 };
 
-//Users
-export const getUser = async (user: User) => {
-  const endpoint = `${baseURL}/user`;
-  return await postRequest(endpoint, user);
-};
-
-//Roles
-export const getRoles = async () => {
-  const endpoint = `${baseURL}/roles`;
-  return await getRequest(endpoint);
-};

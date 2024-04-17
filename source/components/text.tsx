@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TextStyle, ViewStyle, StyleProp } from 'react-native';
+import { responsiveFontSize } from '../theme/responsiveFontSize';
 
 interface CustomTextProps {
     text: string | any;
@@ -8,15 +9,9 @@ interface CustomTextProps {
 }
 
 const CustomText = ({ text, containerStyle, style }: CustomTextProps) => {
-    const [state, setState] = useState(text);
-
-    useEffect(() => {
-        setState(text);
-    }, [text]);
-
     return (
         <View style={[styles.container, containerStyle]}>
-            <Text style={[styles.text, style]}>{state}</Text>
+            <Text style={[styles.text, style]}>{text}</Text>
         </View>
     );
 };
@@ -28,6 +23,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: 'black',
+        fontSize: responsiveFontSize(18),
     },
 });
 

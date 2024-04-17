@@ -14,7 +14,7 @@ const schema = z.object({
     email: z.string().email(),
     firstName: z.string().min(1),
     lastName: z.string().min(1),
-    phoneNumber: z.string().min(10),
+    phoneNumber: z.string().min(10).max(10),
     password: z.string().min(8),
     confirmPassword: z.string().min(8),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -30,15 +30,15 @@ const Register = () => {
     const {
         handleSubmit,
         control,
-
+        watch
     } = useForm<FormFields>({
         defaultValues: {
-            email: 'canotur@live.com',
-            firstName: 'test',
-            lastName: 'test',
-            phoneNumber: '5555555555',
-            password: '12345678',
-            confirmPassword: '12345678',
+            email: '',
+            firstName: '',
+            lastName: '',
+            phoneNumber: '',
+            password: '',
+            confirmPassword: ''
         },
         resolver: zodResolver(schema),
     });

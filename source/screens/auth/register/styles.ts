@@ -1,5 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
 import colors from '../../../theme/colors';
+import {responsiveFontSize} from '../../../theme/responsiveFontSize';
 
 const width = Dimensions.get('window').width;
 export const styles = StyleSheet.create({
@@ -15,10 +16,10 @@ export const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   backButton: {
-    fontSize: 35,
+    fontSize: responsiveFontSize(35),
   },
   headerText: {
-    fontSize: 50,
+    fontSize: responsiveFontSize(55),
     fontWeight: 'bold',
     color: colors.red,
   },
@@ -45,7 +46,7 @@ export const styles = StyleSheet.create({
     elevation: 9,
   },
   registerButtonText: {
-    fontSize: 20,
+    fontSize: responsiveFontSize(20),
     fontWeight: 'bold',
     padding: 10,
     color: 'white',

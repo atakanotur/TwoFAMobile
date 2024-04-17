@@ -2,6 +2,7 @@ import React from 'react'
 import { View, StyleSheet, Text, TextInput } from 'react-native'
 import { Controller } from 'react-hook-form';
 import colors from '../theme/colors';
+import { responsiveFontSize } from '../theme/responsiveFontSize';
 
 type Props = {
     control: any;
@@ -42,7 +43,7 @@ export default FormInput;
 
 const styles = StyleSheet.create({
     textInput: {
-        fontSize: 22,
+        fontSize: responsiveFontSize(22),
         color: colors.gray,
     },
     textInputContainer: {

@@ -16,8 +16,8 @@ const Login = () => {
     const token: String = useAppSelector(state => state.auth.token);
     const user: User = useAppSelector(state => state.auth.user);
     const userId: String = useAppSelector(state => state.auth.userId);
-    const [email, setEmail] = useState<string>("can.otur@hotmail.com");
-    const [password, setPassword] = useState<string>("12345678");
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
     const [twoFAVisible, setTwoFAVisible] = useState<Boolean>(false);
     const [code, setCode] = useState<string>('');
 
